@@ -24,13 +24,21 @@ export default class UserSignupPage extends Component {
   onClickSignup = (event) => {
     event.preventDefault();
 
-    const body = {
+    const { username, name, password } = this.state;
+
+    /*  const body = {
       username: this.state.username,
       name: this.state.name,
       password: this.state.password,
+    };*/
+
+    const body = {
+      username,
+      name,
+      password,
     };
 
-    axios.post("http://localhost:8080/api/user", body);
+    axios.post("/api/user", body);
   };
 
   /*
