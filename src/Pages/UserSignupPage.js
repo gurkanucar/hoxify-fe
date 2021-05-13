@@ -61,52 +61,69 @@ export default class UserSignupPage extends Component {
 
   render() {
     return (
-      <div>
-        <h1>User Signup</h1>
+      <div className="container">
+        <h1 className="">User Signup</h1>
         <form>
-          <div>
-            <label>Kullanıcı Adı</label>
-            <input name="username" onChange={this.onChange}></input>
-          </div>
-
-          <div>
-            <label>Gözükecek İsim</label>
-            <input name="name" onChange={this.onChange}></input>
-          </div>
-
-          <div>
-            <label>Şifre</label>
+          <div className="mb-3">
+            <label className="form-label">Kullanıcı Adı</label>
             <input
+              className="form-control"
+              name="username"
+              onChange={this.onChange}
+            ></input>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Gözükecek İsim</label>
+            <input
+              className="form-control"
+              name="name"
+              onChange={this.onChange}
+            ></input>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Şifre</label>
+            <input
+              className="form-control"
               name="password"
               type="password"
               onChange={this.onChange}
             ></input>
           </div>
 
-          <div>
-            <label>Şifre Tekrar</label>
+          <div className="mb-3">
+            <label className="form-label">Şifre Tekrar</label>
             <input
+              className="form-control"
               name="passwordRepeat"
               type="password"
               onChange={this.onChange}
             ></input>
           </div>
 
-          <div>
-            <label>Okudum Onaylıyorum</label>
+          <div className="mb-3 form-check">
+            <label for="agreeChecked" className="form-check-label">
+              Okudum Onaylıyorum
+            </label>
             <input
+              id="agreeChecked"
+              className="form-check-input"
               name="agreeChecked"
               type="checkbox"
               onChange={this.onChangeAgree}
             ></input>
           </div>
 
-          <button
-            disabled={!this.state.agreeChecked}
-            onClick={this.onClickSignup}
-          >
-            Sign Up
-          </button>
+          <div className=" text-center">
+            <button
+              className="btn btn-primary"
+              disabled={!this.state.agreeChecked}
+              onClick={this.onClickSignup}
+            >
+              Sign Up
+            </button>
+          </div>
         </form>
       </div>
     );
