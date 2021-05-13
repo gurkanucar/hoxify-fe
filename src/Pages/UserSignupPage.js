@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 import { signup } from "../api/apiCalls";
 
+import Input from "../Components/Input";
+
 export default class UserSignupPage extends Component {
   state = {
     username: null,
@@ -10,13 +12,25 @@ export default class UserSignupPage extends Component {
     password: null,
     passwordRepeat: null,
     pendingApiCall: false,
+    errors: {},
   };
 
   onChange = (event) => {
     const { name, value } = event.target; // object destructing
-    // const value = event.target.value;
-    // const name = event.target.name;
-    this.setState({ [name]: value });
+    const errors = { ...this.state.errors };
+    errors[name] = undefined;
+
+    if (name === "password" || name === "passwordRepeat") {
+      if (name === "password" && value !== this.state.passwordRepeat) {
+        errors.passwordRepeat = "Password missmatch";
+      } else if (name === "passwordRepeat" && value !== this.state.password) {
+        errors.passwordRepeat = "Password missmatch";
+      } else {
+        errors.passwordRepeat = undefined;
+      }
+    }
+
+    this.setState({ [name]: value, errors });
   };
 
   onChangeAgree = (event) => {
@@ -25,14 +39,7 @@ export default class UserSignupPage extends Component {
 
   onClickSignup = async (event) => {
     event.preventDefault();
-
     const { username, name, password } = this.state;
-
-    /*  const body = {
-      username: this.state.username,
-      name: this.state.name,
-      password: this.state.password,
-    };*/
 
     const body = {
       username,
@@ -44,80 +51,50 @@ export default class UserSignupPage extends Component {
 
     try {
       const response = await signup(body);
-    } catch (err) {}
-
+    } catch (err) {
+      if (err.response.data.validationErrors) {
+        this.setState({ errors: err.response.data.validationErrors });
+      }
+    }
     this.setState({ pendingApiCall: false });
-
-    //   signup(body).then((response) => {
-    //     this.setState({ pendingApiCall: false });
-    //   })
-    //   .catch((error) => {
-    //     this.setState({ pendingApiCall: false });
-    //   });
   };
-
-  /*
-  onChangeUsername = (event) => {
-    this.setState({ username: event.target.value });
-  };
-
-  onChangeName = (event) => {
-    this.setState({ name: event.target.value });
-  };
-
-  onChangePassword = (event) => {
-    this.setState({ password: event.target.value });
-  };
-
-  onChangePasswordRepeat = (event) => {
-    this.setState({ passwordRepeat: event.target.value });
-  };
-*/
 
   render() {
-    const { pendingApiCall, agreeChecked } = this.state; // object destructing
+    const { pendingApiCall, agreeChecked, errors } = this.state; // object destructing
+    const { username, name, password, passwordRepeat } = errors;
 
     return (
       <div className="container">
         <h1 className="">User Signup</h1>
         <form>
-          <div className="mb-3">
-            <label className="form-label">Kullanıcı Adı</label>
-            <input
-              className="form-control"
-              name="username"
-              onChange={this.onChange}
-            ></input>
-          </div>
+          <Input
+            name="username"
+            label="Username"
+            error={username}
+            onChange={this.onChange}
+          />
+          <Input
+            name="name"
+            label="Name"
+            error={name}
+            onChange={this.onChange}
+          />
 
-          <div className="mb-3">
-            <label className="form-label">Gözükecek İsim</label>
-            <input
-              className="form-control"
-              name="name"
-              onChange={this.onChange}
-            ></input>
-          </div>
+          <Input
+            name="password"
+            label="Password"
+            error={password}
+            onChange={this.onChange}
+            type="password"
+          />
 
-          <div className="mb-3">
-            <label className="form-label">Şifre</label>
-            <input
-              className="form-control"
-              name="password"
-              type="password"
-              onChange={this.onChange}
-            ></input>
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label">Şifre Tekrar</label>
-            <input
-              className="form-control"
-              name="passwordRepeat"
-              type="password"
-              onChange={this.onChange}
-            ></input>
-          </div>
+          <Input
+            name="passwordRepeat"
+            label="Password Repeat"
+            onChange={this.onChange}
+            type="password"
+            error={passwordRepeat}
+          />
 
           <div className="mb-3 form-check">
             <label for="agreeChecked" className="form-check-label">
@@ -135,7 +112,7 @@ export default class UserSignupPage extends Component {
           <div className=" text-center">
             <button
               className="btn btn-primary"
-              disabled={!agreeChecked || pendingApiCall}
+              disabled={pendingApiCall || passwordRepeat !== undefined}
               onClick={this.onClickSignup}
             >
               {pendingApiCall && (
