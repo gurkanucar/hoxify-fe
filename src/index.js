@@ -5,6 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./bootstrap-override.scss";
 
+import "./i18n";
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

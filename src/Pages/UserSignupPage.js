@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 
-import { signup } from "../api/apiCalls";
+import { changeLanguage, signup } from "../api/apiCalls";
+
+import { withTranslation, WithTranslation } from "react-i18next";
 
 import Input from "../Components/Input";
 
-export default class UserSignupPage extends Component {
+class UserSignupPage extends Component {
   state = {
     username: null,
     agreeChecked: false,
@@ -22,9 +24,9 @@ export default class UserSignupPage extends Component {
 
     if (name === "password" || name === "passwordRepeat") {
       if (name === "password" && value !== this.state.passwordRepeat) {
-        errors.passwordRepeat = "Password missmatch";
+        errors.passwordRepeat = this.props.t("Password missmatch");
       } else if (name === "passwordRepeat" && value !== this.state.password) {
-        errors.passwordRepeat = "Password missmatch";
+        errors.passwordRepeat = this.props.t("Password missmatch");
       } else {
         errors.passwordRepeat = undefined;
       }
@@ -59,30 +61,37 @@ export default class UserSignupPage extends Component {
     this.setState({ pendingApiCall: false });
   };
 
+  onChangeLang = (language) => {
+    const { i18n } = this.props;
+    i18n.changeLanguage(language);
+    changeLanguage(language);
+  };
+
   render() {
     const { pendingApiCall, agreeChecked, errors } = this.state; // object destructing
     const { username, name, password, passwordRepeat } = errors;
+    const { t, n } = this.props;
 
     return (
       <div className="container">
-        <h1 className="">User Signup</h1>
+        <h1 className="">{t("Sign Up")}</h1>
         <form>
           <Input
             name="username"
-            label="Username"
+            label={t("Username")}
             error={username}
             onChange={this.onChange}
           />
           <Input
             name="name"
-            label="Name"
+            label={t("Name")}
             error={name}
             onChange={this.onChange}
           />
 
           <Input
             name="password"
-            label="Password"
+            label={t("Password")}
             error={password}
             onChange={this.onChange}
             type="password"
@@ -90,7 +99,7 @@ export default class UserSignupPage extends Component {
 
           <Input
             name="passwordRepeat"
-            label="Password Repeat"
+            label={t("Password Repeat")}
             onChange={this.onChange}
             type="password"
             error={passwordRepeat}
@@ -98,7 +107,7 @@ export default class UserSignupPage extends Component {
 
           <div className="mb-3 form-check">
             <label for="agreeChecked" className="form-check-label">
-              Okudum Onaylıyorum
+              {t("Accept")}
             </label>
             <input
               id="agreeChecked"
@@ -122,11 +131,30 @@ export default class UserSignupPage extends Component {
                   aria-hidden="true"
                 ></span>
               )}
-              {"  "}Sign Up
+              {"  "}
+              {t("Sign Up")}
             </button>
+          </div>
+          <div>
+            <img
+              src="https://www.countryflags.io/tr/flat/64.png"
+              alt="tr"
+              onClick={() => this.onChangeLang("tr")}
+              style={{ cursor: "pointer" }}
+            />
+            <img
+              src="https://www.countryflags.io/us/flat/64.png"
+              alt="en"
+              onClick={() => this.onChangeLang("en")}
+              style={{ cursor: "pointer" }}
+            />
           </div>
         </form>
       </div>
     );
   }
 }
+
+const UserSignupPageWithTranslation = withTranslation()(UserSignupPage); // Hıgh order component
+
+export default withTranslation()(UserSignupPage);
