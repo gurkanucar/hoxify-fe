@@ -5,6 +5,7 @@ import { changeLanguage, signup } from "../api/apiCalls";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import Input from "../Components/Input";
+import LanguageSelector from "../Components/LanguageSelector";
 
 class UserSignupPage extends Component {
   state = {
@@ -135,20 +136,7 @@ class UserSignupPage extends Component {
               {t("Sign Up")}
             </button>
           </div>
-          <div>
-            <img
-              src="https://www.countryflags.io/tr/flat/64.png"
-              alt="tr"
-              onClick={() => this.onChangeLang("tr")}
-              style={{ cursor: "pointer" }}
-            />
-            <img
-              src="https://www.countryflags.io/us/flat/64.png"
-              alt="en"
-              onClick={() => this.onChangeLang("en")}
-              style={{ cursor: "pointer" }}
-            />
-          </div>
+          <LanguageSelector />
         </form>
       </div>
     );
