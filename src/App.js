@@ -4,7 +4,7 @@ import UserSignupPage from "./Pages/UserSignupPage";
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <UserSignupPage />
     </div>
   );
