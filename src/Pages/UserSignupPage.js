@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import axios from "axios";
+
+import { signup } from "../api/apiCalls";
 
 export default class UserSignupPage extends Component {
   state = {
@@ -8,6 +9,7 @@ export default class UserSignupPage extends Component {
     name: null,
     password: null,
     passwordRepeat: null,
+    pendingApiCall: false,
   };
 
   onChange = (event) => {
@@ -21,7 +23,7 @@ export default class UserSignupPage extends Component {
     this.setState({ agreeChecked: event.target.checked });
   };
 
-  onClickSignup = (event) => {
+  onClickSignup = async (event) => {
     event.preventDefault();
 
     const { username, name, password } = this.state;
@@ -38,7 +40,20 @@ export default class UserSignupPage extends Component {
       password,
     };
 
-    axios.post("/api/user", body);
+    this.setState({ pendingApiCall: true });
+
+    try {
+      const response = await signup(body);
+    } catch (err) {}
+
+    this.setState({ pendingApiCall: false });
+
+    //   signup(body).then((response) => {
+    //     this.setState({ pendingApiCall: false });
+    //   })
+    //   .catch((error) => {
+    //     this.setState({ pendingApiCall: false });
+    //   });
   };
 
   /*
@@ -60,6 +75,8 @@ export default class UserSignupPage extends Component {
 */
 
   render() {
+    const { pendingApiCall, agreeChecked } = this.state; // object destructing
+
     return (
       <div className="container">
         <h1 className="">User Signup</h1>
@@ -118,10 +135,17 @@ export default class UserSignupPage extends Component {
           <div className=" text-center">
             <button
               className="btn btn-primary"
-              disabled={!this.state.agreeChecked}
+              disabled={!agreeChecked || pendingApiCall}
               onClick={this.onClickSignup}
             >
-              Sign Up
+              {pendingApiCall && (
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              )}
+              {"  "}Sign Up
             </button>
           </div>
         </form>
