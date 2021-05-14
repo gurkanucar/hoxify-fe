@@ -7,19 +7,20 @@ import UserPage from "./pages/UserPage";
 import LanguageSelector from "./components/LanguageSelector";
 
 import {
-  HashRouter,
-  BrowserRouter,
+  HashRouter as Router,
   Redirect,
   Route,
   Switch,
 } from "react-router-dom";
+import NavBarComponent from "./components/NavBarComponent";
 
 //browser router backendi tetiklediği için şimdilik hash router
 
 function App(props) {
   return (
     <div>
-      <HashRouter>
+      <Router>
+        <NavBarComponent />
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route path="/login" component={UserLoginPage} />
@@ -27,8 +28,8 @@ function App(props) {
           <Route path="/user/:username" component={UserPage} />
           <Redirect to="/" />
         </Switch>
-      </HashRouter>
-      <LanguageSelector />
+      </Router>
+      {/* <LanguageSelector /> */}
 
       {/* <div class="container" style={{ marginTop: 50 }}>
         <div class="row">

@@ -14,12 +14,14 @@ const LanguageSelector = (props) => {
   return (
     <div className="container">
       <img
+        width="40"
         src="https://www.countryflags.io/tr/flat/64.png"
         alt="tr"
         onClick={() => onChangeLang("tr")}
         style={{ cursor: "pointer" }}
       />
       <img
+        width="40"
         src="https://www.countryflags.io/us/flat/64.png"
         alt="en"
         onClick={() => onChangeLang("en")}
