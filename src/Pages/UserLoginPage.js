@@ -105,7 +105,7 @@ class UserLoginPage extends Component {
               onClick={this.alertOnClick}
             />
           </div>
-          <LanguageSelector />
+          {/* <LanguageSelector /> */}
         </form>
       </div>
     );

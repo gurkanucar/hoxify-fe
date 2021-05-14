@@ -126,7 +126,7 @@ class UserSignupPage extends Component {
               text={t("Sign Up")}
             />
           </div>
-          <LanguageSelector />
+          {/* <LanguageSelector /> */}
         </form>
       </div>
     );
