@@ -1,51 +1,70 @@
 import React, { Component } from "react";
 
-import { changeLanguage, login } from "../api/apiCalls";
+import { login } from "../api/apiCalls";
 
-import { withTranslation, WithTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next";
 
 import Input from "../Components/Input";
 import LanguageSelector from "../Components/LanguageSelector";
+import AlertComponent from "../Components/AlertComponent";
 
 class UserLoginPage extends Component {
   state = {
     username: null,
     password: null,
     pendingApiCall: false,
+    isNull: true,
     errors: {},
+    showError: false,
   };
+
+  showFormattedTimeStamp(data) {
+    return new Date(data).toLocaleTimeString("en-US");
+  }
 
   onChange = (event) => {
     const { name, value } = event.target; // object destructing
     const errors = { ...this.state.errors };
     errors[name] = undefined;
-    this.setState({ [name]: value, errors });
+    this.setState({ [name]: value, errors, showError: false });
+    if (this.state.username === null || this.state.password === null) {
+      this.setState({ isNull: true });
+    } else {
+      this.setState({ isNull: false });
+    }
+  };
+
+  alertOnClick = () => {
+    console.log("test");
+    this.setState({ showError: false });
   };
 
   onClickLogin = async (event) => {
     event.preventDefault();
-    const { username, name, password } = this.state;
+    const { username, password } = this.state;
 
-    const body = {
-      username,
-      name,
-      password,
-    };
+    if (username !== null && password != null) {
+      const creds = {
+        username,
+        password,
+      };
 
-    this.setState({ pendingApiCall: true });
+      this.setState({ pendingApiCall: true, showError: false });
 
-    try {
-      const response = await login(body);
-    } catch (err) {
-      if (err.response.data.validationErrors) {
-        this.setState({ errors: err.response.data.validationErrors });
+      try {
+        const response = await login(creds);
+      } catch (err) {
+        this.setState({
+          errors: err.response.data,
+          showError: true,
+        });
       }
+      this.setState({ pendingApiCall: false });
     }
-    this.setState({ pendingApiCall: false });
   };
 
   render() {
-    const { pendingApiCall, errors } = this.state; // object destructing
+    const { pendingApiCall, isNull, errors, showError } = this.state; // object destructing
     const { username, password } = errors;
     const { t, n } = this.props;
 
@@ -67,22 +86,32 @@ class UserLoginPage extends Component {
             onChange={this.onChange}
           />
 
-          <div className=" text-center">
+          <div className="text-center">
             <button
               className="btn btn-primary"
-              disabled={pendingApiCall}
+              disabled={pendingApiCall || isNull}
               onClick={this.onClickLogin}
             >
               {pendingApiCall && (
                 <span
                   className="spinner-border spinner-border-sm"
+                  style={{ marginRight: 20 }}
                   role="status"
                   aria-hidden="true"
                 ></span>
               )}
-              {"  "}
               {t("Login")}
             </button>
+            <AlertComponent
+              title="Hata"
+              message={
+                errors.message +
+                "  " +
+                this.showFormattedTimeStamp(errors.timestamp)
+              }
+              show={showError}
+              onClick={this.alertOnClick}
+            />
           </div>
           <LanguageSelector />
         </form>
