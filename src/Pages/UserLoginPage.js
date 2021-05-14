@@ -50,15 +50,21 @@ class UserLoginPage extends Component {
     event.preventDefault();
     const { username, password } = this.state;
 
+    const { push } = this.props.history;
+
     if (username !== null && password != null) {
       const creds = {
         username,
         password,
       };
 
-      const response = await login(creds).catch((error) => {
-        this.setState({ errors: error.response.data, showError: true });
-      });
+      await login(creds)
+        .then((res) => {
+          push("/");
+        })
+        .catch((error) => {
+          this.setState({ errors: error.response.data, showError: true });
+        });
     }
   };
 
