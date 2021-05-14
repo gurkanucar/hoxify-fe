@@ -15,7 +15,6 @@ class UserSignupPage extends Component {
     name: null,
     password: null,
     passwordRepeat: null,
-    pendingApiCall: false,
     errors: {},
   };
 
@@ -51,8 +50,6 @@ class UserSignupPage extends Component {
       password,
     };
 
-    this.setState({ pendingApiCall: true });
-
     try {
       const response = await signup(body);
     } catch (err) {
@@ -60,7 +57,6 @@ class UserSignupPage extends Component {
         this.setState({ errors: err.response.data.validationErrors });
       }
     }
-    this.setState({ pendingApiCall: false });
   };
 
   onChangeLang = (language) => {
@@ -70,9 +66,9 @@ class UserSignupPage extends Component {
   };
 
   render() {
-    const { pendingApiCall, agreeChecked, errors } = this.state; // object destructing
+    const { agreeChecked, errors } = this.state; // object destructing
     const { username, name, password, passwordRepeat } = errors;
-    const { t, n } = this.props;
+    const { t, pendingApiCall } = this.props;
 
     return (
       <div className="container">

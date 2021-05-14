@@ -14,7 +14,6 @@ class UserLoginPage extends Component {
   state = {
     username: null,
     password: null,
-    pendingApiCall: false,
     isNull: true,
     errors: {},
     showError: false,
@@ -50,28 +49,6 @@ class UserLoginPage extends Component {
     this.setState({ showError: false });
   };
 
-  componentDidMount() {
-    axios.interceptors.request.use((request) => {
-      this.setState({ pendingApiCall: true, showError: false });
-      return request;
-    });
-
-    axios.interceptors.response.use(
-      (response) => {
-        this.setState({ pendingApiCall: false });
-        return response;
-      },
-      (error) => {
-        this.setState({
-          pendingApiCall: false,
-          errors: error.response.data,
-          showError: true,
-        });
-        throw error;
-      }
-    );
-  }
-
   onClickLogin = async (event) => {
     event.preventDefault();
     const { username, password } = this.state;
@@ -82,24 +59,16 @@ class UserLoginPage extends Component {
         password,
       };
 
-      const response = await login(creds);
-
-      /*  try {
-        const response = await login(creds);
-      } catch (err) {
-        this.setState({
-          errors: err.response.data,
-          showError: true,
-        });
-      }
-      this.setState({ pendingApiCall: false });*/
+      const response = await login(creds).catch((error) => {
+        this.setState({ errors: error.response.data, showError: true });
+      });
     }
   };
 
   render() {
-    const { pendingApiCall, isNull, errors, showError } = this.state; // object destructing
+    const { isNull, errors, showError } = this.state; // object destructing
     const { username, password } = errors;
-    const { t, n } = this.props;
+    const { t, pendingApiCall } = this.props;
 
     return (
       <div className="container">

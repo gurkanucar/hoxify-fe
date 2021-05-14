@@ -4,12 +4,16 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./bootstrap-override.scss";
-
 import "./i18n";
+
+import "./shared/ApiProgress";
+import ApiProgress from "./shared/ApiProgress";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ApiProgress>
+      <App />
+    </ApiProgress>
   </React.StrictMode>,
   document.getElementById("root")
 );

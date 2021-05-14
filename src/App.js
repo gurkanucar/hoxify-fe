@@ -2,16 +2,16 @@ import "./App.css";
 import UserSignupPage from "./pages/UserSignupPage";
 import UserLoginPage from "./pages/UserLoginPage";
 
-function App() {
+function App(props) {
   return (
     <div>
       <div class="container" style={{ marginTop: 50 }}>
         <div class="row">
           <div class="col-lg-6">
-            <UserSignupPage />
+            <UserSignupPage {...props} />
           </div>
           <div class="col-lg-6">
-            <UserLoginPage />
+            <UserLoginPage {...props} />
           </div>
         </div>
       </div>
