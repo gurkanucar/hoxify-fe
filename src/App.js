@@ -1,7 +1,6 @@
-import logo from "./logo.svg";
 import "./App.css";
-import UserSignupPage from "./Pages/UserSignupPage";
-import UserLoginPage from "./Pages/UserLoginPage";
+import UserSignupPage from "./pages/UserSignupPage";
+import UserLoginPage from "./pages/UserLoginPage";
 
 function App() {
   return (

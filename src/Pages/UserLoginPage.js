@@ -24,15 +24,24 @@ class UserLoginPage extends Component {
     return new Date(data).toLocaleTimeString("en-US");
   }
 
-  onChange = (event) => {
+  onChange = async (event) => {
     const { name, value } = event.target; // object destructing
     const errors = { ...this.state.errors };
     errors[name] = undefined;
-    this.setState({ [name]: value, errors, showError: false });
-    if (this.state.username === null || this.state.password === null) {
+    await this.setState({ [name]: value, errors, showError: false });
+    const { username, password } = this.state;
+    if (
+      username === null ||
+      username === "" ||
+      password === "" ||
+      password === null
+    ) {
       this.setState({ isNull: true });
+      console.log("bos");
+      console.log("Data", username, password);
     } else {
       this.setState({ isNull: false });
+      console.log("dolu");
     }
   };
 

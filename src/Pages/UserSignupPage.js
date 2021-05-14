@@ -4,9 +4,9 @@ import { changeLanguage, signup } from "../api/apiCalls";
 
 import { withTranslation, WithTranslation } from "react-i18next";
 
-import Input from "../Components/Input";
-import LanguageSelector from "../Components/LanguageSelector";
-import ButtonWithProgressBarComponent from "../Components/ButtonWithProgressBarComponent";
+import Input from "../components/Input";
+import LanguageSelector from "../components/LanguageSelector";
+import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
 
 class UserSignupPage extends Component {
   state = {
