@@ -112,13 +112,11 @@ class UserLoginPage extends Component {
   }
 }
 
+const UserLoginPageWithTranslation = withTranslation()(UserLoginPage);
+
 const UserLoginPageWithApiProgress = withApiProgress(
-  UserLoginPage,
+  UserLoginPageWithTranslation,
   "/api/user/login"
 );
 
-const UserLoginPageWithTranslation = withTranslation()(
-  UserLoginPageWithApiProgress
-); // Hıgh order component
-
-export default UserLoginPageWithTranslation;
+export default UserLoginPageWithApiProgress;
