@@ -6,7 +6,16 @@ import UserLoginPage from "./Pages/UserLoginPage";
 function App() {
   return (
     <div>
-      <UserLoginPage />
+      <div class="container" style={{ marginTop: 50 }}>
+        <div class="row">
+          <div class="col-lg-6">
+            <UserSignupPage />
+          </div>
+          <div class="col-lg-6">
+            <UserLoginPage />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

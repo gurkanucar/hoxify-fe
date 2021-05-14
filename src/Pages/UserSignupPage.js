@@ -6,6 +6,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 
 import Input from "../Components/Input";
 import LanguageSelector from "../Components/LanguageSelector";
+import ButtonWithProgressBarComponent from "../Components/ButtonWithProgressBarComponent";
 
 class UserSignupPage extends Component {
   state = {
@@ -106,7 +107,7 @@ class UserSignupPage extends Component {
             error={passwordRepeat}
           />
 
-          <div className="mb-3 form-check">
+          {/* <div className="mb-3 form-check">
             <label for="agreeChecked" className="form-check-label">
               {t("Accept")}
             </label>
@@ -117,24 +118,16 @@ class UserSignupPage extends Component {
               type="checkbox"
               onChange={this.onChangeAgree}
             ></input>
-          </div>
+          </div> */}
 
           <div className=" text-center">
-            <button
-              className="btn btn-primary"
+            <ButtonWithProgressBarComponent
+              name="btn"
               disabled={pendingApiCall || passwordRepeat !== undefined}
               onClick={this.onClickSignup}
-            >
-              {pendingApiCall && (
-                <span
-                  className="spinner-border spinner-border-sm"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-              )}
-              {"  "}
-              {t("Sign Up")}
-            </button>
+              showSpinner={pendingApiCall}
+              text={t("Sign Up")}
+            />
           </div>
           <LanguageSelector />
         </form>

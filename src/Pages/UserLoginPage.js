@@ -7,6 +7,7 @@ import { withTranslation } from "react-i18next";
 import Input from "../Components/Input";
 import LanguageSelector from "../Components/LanguageSelector";
 import AlertComponent from "../Components/AlertComponent";
+import ButtonWithProgressBarComponent from "../Components/ButtonWithProgressBarComponent";
 
 class UserLoginPage extends Component {
   state = {
@@ -87,21 +88,14 @@ class UserLoginPage extends Component {
           />
 
           <div className="text-center">
-            <button
-              className="btn btn-primary"
+            <ButtonWithProgressBarComponent
+              name="btn"
               disabled={pendingApiCall || isNull}
               onClick={this.onClickLogin}
-            >
-              {pendingApiCall && (
-                <span
-                  className="spinner-border spinner-border-sm"
-                  style={{ marginRight: 20 }}
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-              )}
-              {t("Login")}
-            </button>
+              showSpinner={pendingApiCall}
+              text={t("Login")}
+            />
+
             <AlertComponent
               title="Hata"
               message={
