@@ -4,10 +4,11 @@ import { login } from "../api/apiCalls";
 
 import { withTranslation } from "react-i18next";
 
-import Input from "../Components/Input";
-import LanguageSelector from "../Components/LanguageSelector";
-import AlertComponent from "../Components/AlertComponent";
-import ButtonWithProgressBarComponent from "../Components/ButtonWithProgressBarComponent";
+import Input from "../components/Input";
+import LanguageSelector from "../components/LanguageSelector";
+import AlertComponent from "../components/AlertComponent";
+import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
+import axios from "axios";
 
 class UserLoginPage extends Component {
   state = {
@@ -40,6 +41,28 @@ class UserLoginPage extends Component {
     this.setState({ showError: false });
   };
 
+  componentDidMount() {
+    axios.interceptors.request.use((request) => {
+      this.setState({ pendingApiCall: true, showError: false });
+      return request;
+    });
+
+    axios.interceptors.response.use(
+      (response) => {
+        this.setState({ pendingApiCall: false });
+        return response;
+      },
+      (error) => {
+        this.setState({
+          pendingApiCall: false,
+          errors: error.response.data,
+          showError: true,
+        });
+        throw error;
+      }
+    );
+  }
+
   onClickLogin = async (event) => {
     event.preventDefault();
     const { username, password } = this.state;
@@ -50,9 +73,9 @@ class UserLoginPage extends Component {
         password,
       };
 
-      this.setState({ pendingApiCall: true, showError: false });
+      const response = await login(creds);
 
-      try {
+      /*  try {
         const response = await login(creds);
       } catch (err) {
         this.setState({
@@ -60,7 +83,7 @@ class UserLoginPage extends Component {
           showError: true,
         });
       }
-      this.setState({ pendingApiCall: false });
+      this.setState({ pendingApiCall: false });*/
     }
   };
 
