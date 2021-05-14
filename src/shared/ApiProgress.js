@@ -9,33 +9,33 @@ export default class ApiProgress extends Component {
   componentDidMount() {
     axios.interceptors.request.use((request) => {
       //  console.log("Api istek atildi");
-      this.setState({ pendingApiCall: true });
+      this.updateApiCallFor(request.url, true);
       return request;
     });
 
     axios.interceptors.response.use(
       (response) => {
-        this.setState({ pendingApiCall: false });
         //   console.log("Api istek bitti");
+        this.updateApiCallFor(response.config.url, false);
         return response;
       },
       (error) => {
-        this.setState({
-          pendingApiCall: false,
-        });
+        this.updateApiCallFor(error.config.url, false);
         throw error;
       }
     );
   }
 
+  updateApiCallFor = (url, inProgress) => {
+    if (url === this.props.path) {
+      this.setState({ pendingApiCall: inProgress });
+    }
+  };
+
   render() {
     const { pendingApiCall } = this.state;
     return (
-      <div>
-        {React.cloneElement(this.props.children, {
-          pendingApiCall: pendingApiCall,
-        })}
-      </div>
+      <div>{React.cloneElement(this.props.children, { pendingApiCall })}</div>
     );
   }
 }

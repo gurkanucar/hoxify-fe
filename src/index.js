@@ -8,12 +8,14 @@ import "./i18n";
 
 import "./shared/ApiProgress";
 import ApiProgress from "./shared/ApiProgress";
+import UserLoginPage from "./pages/UserLoginPage";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApiProgress>
-      <App />
-    </ApiProgress>
+    {/* <ApiProgress> */}
+    {/* <UserLoginPage /> */}
+    <App />
+    {/* </ApiProgress> */}
   </React.StrictMode>,
   document.getElementById("root")
 );

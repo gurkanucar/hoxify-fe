@@ -36,16 +36,12 @@ class UserLoginPage extends Component {
       password === null
     ) {
       this.setState({ isNull: true });
-      console.log("bos");
-      console.log("Data", username, password);
     } else {
       this.setState({ isNull: false });
-      console.log("dolu");
     }
   };
 
   alertOnClick = () => {
-    console.log("test");
     this.setState({ showError: false });
   };
 
