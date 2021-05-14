@@ -9,6 +9,7 @@ import LanguageSelector from "../components/LanguageSelector";
 import AlertComponent from "../components/AlertComponent";
 import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
 import axios from "axios";
+import { withApiProgress } from "../shared/ApiProgress";
 
 class UserLoginPage extends Component {
   state = {
@@ -111,6 +112,13 @@ class UserLoginPage extends Component {
   }
 }
 
-const UserLoginPageWithTranslation = withTranslation()(UserLoginPage); // Hıgh order component
+const UserLoginPageWithApiProgress = withApiProgress(
+  UserLoginPage,
+  "/api/user/login"
+);
 
-export default withTranslation()(UserLoginPage);
+const UserLoginPageWithTranslation = withTranslation()(
+  UserLoginPageWithApiProgress
+); // Hıgh order component
+
+export default UserLoginPageWithTranslation;

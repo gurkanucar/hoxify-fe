@@ -7,6 +7,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import Input from "../components/Input";
 import LanguageSelector from "../components/LanguageSelector";
 import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
+import { withApiProgress } from "../shared/ApiProgress";
 
 class UserSignupPage extends Component {
   state = {
@@ -132,6 +133,13 @@ class UserSignupPage extends Component {
   }
 }
 
-const UserSignupPageWithTranslation = withTranslation()(UserSignupPage); // Hıgh order component
+const UserSignupPageWithApiProgress = withApiProgress(
+  UserSignupPage,
+  "/api/user"
+);
 
-export default withTranslation()(UserSignupPage);
+const UserSignupPageWithTranslation = withTranslation()(
+  UserSignupPageWithApiProgress
+); // Hıgh order component
+
+export default UserSignupPageWithTranslation;

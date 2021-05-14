@@ -9,14 +9,12 @@ function App(props) {
       <div class="container" style={{ marginTop: 50 }}>
         <div class="row">
           <div class="col-lg-6">
-            <ApiProgress path="/api/user">
-              <UserSignupPage />
-            </ApiProgress>
+            <UserSignupPage />
           </div>
           <div class="col-lg-6">
-            <ApiProgress path="/api/user/login">
-              <UserLoginPage />
-            </ApiProgress>
+            {/* <ApiProgress path="/api/user/login"> */}
+            <UserLoginPage />
+            {/* </ApiProgress> */}
           </div>
         </div>
       </div>
