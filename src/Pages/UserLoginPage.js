@@ -49,7 +49,7 @@ class UserLoginPage extends Component {
   onClickLogin = async (event) => {
     event.preventDefault();
     const { username, password } = this.state;
-
+    const { onLoginSuccess } = this.props;
     const { push } = this.props.history;
 
     if (username !== null && password != null) {
@@ -60,6 +60,7 @@ class UserLoginPage extends Component {
 
       await login(creds)
         .then((res) => {
+          onLoginSuccess(username);
           push("/");
         })
         .catch((error) => {

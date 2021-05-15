@@ -12,7 +12,7 @@ const Input = (props) => {
         onChange={onChange}
         type={type == null ? "text" : type}
       ></input>
-      <div class="invalid-feedback">{error}</div>
+      <div className="invalid-feedback">{error}</div>
     </div>
   );
 };

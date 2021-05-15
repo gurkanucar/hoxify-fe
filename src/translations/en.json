@@ -6,5 +6,6 @@
     "Username": "Username",
     "Name": "Name",
     "Accept": "Accept",
-    "Login":"Login"
+    "Login":"Login",
+    "Log Out":"Log Out"
 }

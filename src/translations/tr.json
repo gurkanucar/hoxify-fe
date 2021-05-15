@@ -6,5 +6,6 @@
     "Username": "Kullanıcı Adı",
     "Name": "İsim",
     "Accept": "Kabul Et",
-    "Login":"Giriş Yap"
+    "Login":"Giriş Yap",
+    "Log Out":"Çıkış Yap"
 }

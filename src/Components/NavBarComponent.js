@@ -6,7 +6,32 @@ import LanguageSelector from "./LanguageSelector";
 
 class NavBarComponent extends Component {
   render() {
-    const { t } = this.props;
+    const { t, isLoggedIn, username, onLogoutSuccess } = this.props;
+
+    let Links = (
+      <ul className="navbar-nav ml-auto">
+        <Link className="nav-link" to="/login">
+          <li>{t("Login")}</li>
+        </Link>
+        <Link className="nav-link" to="/signup">
+          <li>{t("Sign Up")}</li>
+        </Link>
+      </ul>
+    );
+
+    if (isLoggedIn) {
+      Links = (
+        <ul className="navbar-nav ml-auto">
+          <Link className="nav-link" to={`/user/${username}`}>
+            <li>{username}</li>
+          </Link>
+          <Link className="nav-link" to="/">
+            <li onClick={onLogoutSuccess}>{t("Log Out")}</li>
+          </Link>
+        </ul>
+      );
+    }
+
     return (
       <div className="shadow-sm bg-light mb-2">
         <nav className="navbar navbar-light container navbar-expand">
@@ -20,17 +45,10 @@ class NavBarComponent extends Component {
               />
               Hoaxify
             </Link>
-            <ul className="navbar-nav ml-auto">
-              <Link className="nav-link" to="/login">
-                <li>{t("Login")}</li>
-              </Link>
-              <Link className="nav-link" to="/signup">
-                <li>{t("Sign Up")}</li>
-              </Link>
-              <li>
-                <LanguageSelector />
-              </li>
-            </ul>
+            <div>
+              <LanguageSelector />
+            </div>
+            {Links}
           </div>
         </nav>
       </div>
