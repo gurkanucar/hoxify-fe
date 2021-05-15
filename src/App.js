@@ -1,11 +1,9 @@
 import "./App.css";
 import UserSignupPage from "./pages/UserSignupPage";
 import UserLoginPage from "./pages/UserLoginPage";
-import ApiProgress from "./shared/ApiProgress";
 import HomePage from "./pages/HomePage";
 import UserPage from "./pages/UserPage";
-import LanguageSelector from "./components/LanguageSelector";
-
+import { connect } from "react-redux";
 import {
   HashRouter as Router,
   Redirect,
@@ -14,8 +12,6 @@ import {
 } from "react-router-dom";
 import NavBarComponent from "./components/NavBarComponent";
 import React from "react";
-import { render } from "@testing-library/react";
-import { Authentication } from "./shared/AuthenticationContext";
 
 //browser router backendi tetiklediği için şimdilik hash router
 
@@ -23,7 +19,7 @@ class App extends React.Component {
   //static contextType = Authentication;
 
   render() {
-    const isLoggedIn = false; //this.context.state.isLoggedIn;
+    const { isLoggedIn } = this.props;
 
     return (
       <div>
@@ -42,4 +38,10 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapStateToProps = (store) => {
+  return {
+    isLoggedIn: store.isLoggedIn,
+  };
+};
+
+export default connect(mapStateToProps)(App);
