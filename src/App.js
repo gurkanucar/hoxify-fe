@@ -15,73 +15,28 @@ import {
 import NavBarComponent from "./components/NavBarComponent";
 import React from "react";
 import { render } from "@testing-library/react";
+import { Authentication } from "./shared/AuthenticationContext";
 
 //browser router backendi tetiklediği için şimdilik hash router
 
 class App extends React.Component {
-  state = {
-    isLoggedIn: false,
-    username: undefined,
-  };
-
-  onLoginSuccess = (username) => {
-    this.setState({ username, isLoggedIn: true });
-  };
-
-  onLogoutSuccess = () => {
-    this.setState({ username: undefined, isLoggedIn: false });
-  };
+  static contextType = Authentication;
 
   render() {
-    const { isLoggedIn, username } = this.state;
+    const isLoggedIn = this.context.state.isLoggedIn;
 
     return (
       <div>
         <Router>
-          <NavBarComponent
-            username={username}
-            isLoggedIn={isLoggedIn}
-            onLogoutSuccess={this.onLogoutSuccess}
-          />
+          <NavBarComponent />
           <Switch>
             <Route exact path="/" component={HomePage} />
-            {!isLoggedIn && (
-              <Route
-                path="/login"
-                component={(props) => {
-                  return (
-                    <UserLoginPage
-                      {...props}
-                      onLoginSuccess={this.onLoginSuccess}
-                    />
-                  );
-                }}
-              />
-            )}
+            {!isLoggedIn && <Route path="/login" component={UserLoginPage} />}
             <Route path="/signup" component={UserSignupPage} />
-            <Route
-              path="/user/:username"
-              component={(props) => {
-                return <UserPage {...props} username={username} />;
-              }}
-            />
+            <Route path="/user/:username" component={UserPage} />
             <Redirect to="/" />
           </Switch>
         </Router>
-        {/* <LanguageSelector /> */}
-
-        {/* <div class="container" style={{ marginTop: 50 }}>
-          <div class="row">
-            <div class="col-lg-6">
-              <UserSignupPage />
-            </div>
-            <div class="col-lg-6">
-               <ApiProgress path="/api/user/login"> 
-              <UserLoginPage />
-             </ApiProgress>
-            </div>
-          </div>
-        </div> */}
       </div>
     );
   }

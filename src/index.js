@@ -7,20 +7,17 @@ import "./bootstrap-override.scss";
 import "./i18n";
 
 import "./shared/ApiProgress";
-import ApiProgress from "./shared/ApiProgress";
-import UserLoginPage from "./pages/UserLoginPage";
+import AuthenticationContext, {
+  Authentication,
+} from "./shared/AuthenticationContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <ApiProgress> */}
-    {/* <UserLoginPage /> */}
-    <App />
-    {/* </ApiProgress> */}
+    <AuthenticationContext>
+      <App />
+    </AuthenticationContext>
   </React.StrictMode>,
   document.getElementById("root")
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

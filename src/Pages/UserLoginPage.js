@@ -10,8 +10,11 @@ import AlertComponent from "../components/AlertComponent";
 import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
 import axios from "axios";
 import { withApiProgress } from "../shared/ApiProgress";
+import { Authentication } from "../shared/AuthenticationContext";
 
 class UserLoginPage extends Component {
+  static contextType = Authentication;
+
   state = {
     username: null,
     password: null,
@@ -49,7 +52,7 @@ class UserLoginPage extends Component {
   onClickLogin = async (event) => {
     event.preventDefault();
     const { username, password } = this.state;
-    const { onLoginSuccess } = this.props;
+    const { onLoginSuccess } = this.context;
     const { push } = this.props.history;
 
     if (username !== null && password != null) {
@@ -60,7 +63,11 @@ class UserLoginPage extends Component {
 
       await login(creds)
         .then((res) => {
-          onLoginSuccess(username);
+          const authState = {
+            ...res.data,
+            password,
+          };
+          onLoginSuccess(authState);
           push("/");
         })
         .catch((error) => {

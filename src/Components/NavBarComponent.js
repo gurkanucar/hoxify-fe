@@ -2,57 +2,65 @@ import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { Authentication } from "../shared/AuthenticationContext";
 import LanguageSelector from "./LanguageSelector";
 
 class NavBarComponent extends Component {
+  static contextType = Authentication;
+
   render() {
-    const { t, isLoggedIn, username, onLogoutSuccess } = this.props;
+    const { t } = this.props;
 
-    let Links = (
-      <ul className="navbar-nav ml-auto">
-        <Link className="nav-link" to="/login">
-          <li>{t("Login")}</li>
-        </Link>
-        <Link className="nav-link" to="/signup">
-          <li>{t("Sign Up")}</li>
-        </Link>
-      </ul>
-    );
+    {
+      const { state, onLogoutSuccess } = this.context;
+      const { isLoggedIn, username } = state;
 
-    if (isLoggedIn) {
-      Links = (
+      let Links = (
         <ul className="navbar-nav ml-auto">
-          <Link className="nav-link" to={`/user/${username}`}>
-            <li>{username}</li>
+          <Link className="nav-link" to="/login">
+            <li>{t("Login")}</li>
           </Link>
-          <Link className="nav-link" to="/">
-            <li onClick={onLogoutSuccess}>{t("Log Out")}</li>
+          <Link className="nav-link" to="/signup">
+            <li>{t("Sign Up")}</li>
           </Link>
         </ul>
       );
-    }
 
-    return (
-      <div className="shadow-sm bg-light mb-2">
-        <nav className="navbar navbar-light container navbar-expand">
-          <div className="container-fluid">
-            <Link className="navbar-brand" to="/">
-              <img
-                src={logo}
-                width="50"
-                style={{ marginRight: 20 }}
-                alt="logo"
-              />
-              Hoaxify
+      if (isLoggedIn) {
+        Links = (
+          <ul className="navbar-nav ml-auto">
+            <Link className="nav-link" to={`/user/${username}`}>
+              <li>{username}</li>
             </Link>
-            <div>
-              <LanguageSelector />
+            <Link className="nav-link" to="/">
+              <li onClick={onLogoutSuccess}>{t("Log Out")}</li>
+            </Link>
+          </ul>
+        );
+      }
+
+      return (
+        <div className="shadow-sm bg-light mb-2">
+          <nav className="navbar navbar-light container navbar-expand">
+            <div className="container-fluid">
+              <Link className="navbar-brand" to="/">
+                <img
+                  src={logo}
+                  width="50"
+                  style={{ marginRight: 20 }}
+                  alt="logo"
+                />
+                Hoaxify
+              </Link>
+              <div>
+                <LanguageSelector />
+              </div>
+              {Links}
             </div>
-            {Links}
-          </div>
-        </nav>
-      </div>
-    );
+          </nav>
+        </div>
+      );
+    }
   }
 }
 

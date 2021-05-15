@@ -5,7 +5,7 @@ const UserPage = (props) => {
   return (
     <div className="container">
       <h1>User Profile</h1>
-      <ProfileCard username={props.username} />
+      <ProfileCard />
     </div>
   );
 };
