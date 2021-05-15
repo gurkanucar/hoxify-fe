@@ -5,20 +5,15 @@ import logo from "../assets/logo.png";
 //import { Authentication } from "../shared/AuthenticationContext";
 import LanguageSelector from "./LanguageSelector";
 
+import { logoutSuccess } from "../redux/authActions";
+
 import { connect } from "react-redux";
 
 class NavBarComponent extends Component {
   //static contextType = Authentication;
 
-  onClickLogout = () => {
-    const action = {
-      type: "logout-success",
-    };
-    this.props.dispatch(action);
-  };
-
   render() {
-    const { t, username, isLoggedIn } = this.props;
+    const { t, username, isLoggedIn, onLogoutSuccess } = this.props;
     // console.log(this.props);
 
     let Links = (
@@ -39,7 +34,7 @@ class NavBarComponent extends Component {
             <li>{username}</li>
           </Link>
           <Link className="nav-link" to="/">
-            <li onClick={this.onClickLogout}>{t("Log Out")}</li>
+            <li onClick={onLogoutSuccess}>{t("Log Out")}</li>
           </Link>
         </ul>
       );
@@ -79,4 +74,15 @@ const mapStateToProps = (store) => {
   };
 };
 
-export default connect(mapStateToProps)(TopBarWithTranslation);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLogoutSuccess: () => {
+      return dispatch(logoutSuccess());
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TopBarWithTranslation);
