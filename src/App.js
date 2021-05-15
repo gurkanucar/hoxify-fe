@@ -20,10 +20,10 @@ import { Authentication } from "./shared/AuthenticationContext";
 //browser router backendi tetiklediği için şimdilik hash router
 
 class App extends React.Component {
-  static contextType = Authentication;
+  //static contextType = Authentication;
 
   render() {
-    const isLoggedIn = this.context.state.isLoggedIn;
+    const isLoggedIn = false; //this.context.state.isLoggedIn;
 
     return (
       <div>

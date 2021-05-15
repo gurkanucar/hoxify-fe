@@ -8,12 +8,11 @@ import Input from "../components/Input";
 import LanguageSelector from "../components/LanguageSelector";
 import AlertComponent from "../components/AlertComponent";
 import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
-import axios from "axios";
 import { withApiProgress } from "../shared/ApiProgress";
-import { Authentication } from "../shared/AuthenticationContext";
+//import { Authentication } from "../shared/AuthenticationContext";
 
 class UserLoginPage extends Component {
-  static contextType = Authentication;
+  //static contextType = Authentication;
 
   state = {
     username: null,
@@ -52,7 +51,8 @@ class UserLoginPage extends Component {
   onClickLogin = async (event) => {
     event.preventDefault();
     const { username, password } = this.state;
-    const { onLoginSuccess } = this.context;
+    //const { onLoginSuccess } = this.context;
+    const onLogoutSuccess = () => {};
     const { push } = this.props.history;
 
     if (username !== null && password != null) {
@@ -67,7 +67,7 @@ class UserLoginPage extends Component {
             ...res.data,
             password,
           };
-          onLoginSuccess(authState);
+          // onLoginSuccess(authState);
           push("/");
         })
         .catch((error) => {
