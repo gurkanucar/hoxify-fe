@@ -47,12 +47,10 @@ export function withApiProgress(WrappdedComponent, apiPath) {
     };
 
     render() {
-      const { pendingApiCall } = this.state;
-      /* return (
-        <div>{React.cloneElement(this.props.children, { pendingApiCall })}</div>
-      );*/
+      const pendingApiCall =
+        this.state.pendingApiCall || this.props.pendingApiCall;
       return (
-        <WrappdedComponent pendingApiCall={pendingApiCall} {...this.props} />
+        <WrappdedComponent {...this.props} pendingApiCall={pendingApiCall} />
       );
     }
   };

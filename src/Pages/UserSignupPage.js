@@ -9,6 +9,9 @@ import LanguageSelector from "../components/LanguageSelector";
 import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
 import { withApiProgress } from "../shared/ApiProgress";
 
+import { connect } from "react-redux";
+import { signupHandler } from "../redux/authActions";
+
 class UserSignupPage extends Component {
   state = {
     username: null,
@@ -44,6 +47,8 @@ class UserSignupPage extends Component {
   onClickSignup = async (event) => {
     event.preventDefault();
     const { username, name, password } = this.state;
+    const { history, dispatch } = this.props;
+    const { push } = history;
 
     const body = {
       username,
@@ -52,7 +57,8 @@ class UserSignupPage extends Component {
     };
 
     try {
-      const response = await signup(body);
+      await dispatch(signupHandler(body));
+      push("/");
     } catch (err) {
       if (err.response.data.validationErrors) {
         this.setState({ errors: err.response.data.validationErrors });
@@ -133,13 +139,18 @@ class UserSignupPage extends Component {
   }
 }
 
-const UserSignupPageWithApiProgress = withApiProgress(
+const UserSignupPageWithApiProgressForSignupRequest = withApiProgress(
   UserSignupPage,
   "/api/user"
 );
 
+const UserSignupPageWithApiProgressForLoginRequest = withApiProgress(
+  UserSignupPageWithApiProgressForSignupRequest,
+  "/api/user/login"
+);
+
 const UserSignupPageWithTranslation = withTranslation()(
-  UserSignupPageWithApiProgress
+  UserSignupPageWithApiProgressForLoginRequest
 ); // Hıgh order component
 
-export default UserSignupPageWithTranslation;
+export default connect()(UserSignupPageWithTranslation);
