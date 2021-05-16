@@ -5,12 +5,10 @@ import Input from "../components/Input";
 import AlertComponent from "../components/AlertComponent";
 import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
 import { withApiProgress } from "../shared/ApiProgress";
-import { loginSuccess } from "../redux/authActions";
+import { loginHandler, loginSuccess } from "../redux/authActions";
 import { connect } from "react-redux";
 
 class UserLoginPage extends Component {
-  //static contextType = Authentication;
-
   state = {
     username: null,
     password: null,
@@ -18,10 +16,6 @@ class UserLoginPage extends Component {
     errors: {},
     showError: false,
   };
-
-  showFormattedTimeStamp(data) {
-    return new Date(data).toLocaleTimeString("en-US");
-  }
 
   onChange = async (event) => {
     const { name, value } = event.target; // object destructing
@@ -48,7 +42,8 @@ class UserLoginPage extends Component {
   onClickLogin = async (event) => {
     event.preventDefault();
     const { username, password } = this.state;
-    const { push } = this.props.history;
+    const { history, dispatch } = this.props;
+    const { push } = history;
 
     if (username !== null && password != null) {
       const creds = {
@@ -56,24 +51,17 @@ class UserLoginPage extends Component {
         password,
       };
 
-      await login(creds)
-        .then((res) => {
-          const authState = {
-            ...res.data,
-            password,
-          };
-          this.props.onLoginSuccess(authState);
-          push("/");
-        })
-        .catch((error) => {
-          this.setState({ errors: error.response.data, showError: true });
-        });
+      try {
+        await dispatch(loginHandler(creds));
+        push("/");
+      } catch (apiError) {
+        this.setState({ errors: apiError, showError: true });
+      }
     }
   };
 
   render() {
     const { isNull, errors, showError } = this.state; // object destructing
-    const { username, password } = errors;
     const { t, pendingApiCall } = this.props;
 
     return (
@@ -83,14 +71,12 @@ class UserLoginPage extends Component {
           <Input
             name="username"
             label={t("Username")}
-            error={username}
             onChange={this.onChange}
           />
           <Input
             name="password"
             type="password"
             label={t("Password")}
-            error={password}
             onChange={this.onChange}
           />
 
@@ -105,16 +91,11 @@ class UserLoginPage extends Component {
 
             <AlertComponent
               title="Hata"
-              message={
-                errors.message +
-                "  " +
-                this.showFormattedTimeStamp(errors.timestamp)
-              }
+              message={errors?.message}
               show={showError}
               onClick={this.alertOnClick}
             />
           </div>
-          {/* <LanguageSelector /> */}
         </form>
       </div>
     );
@@ -128,12 +109,4 @@ const UserLoginPageWithApiProgress = withApiProgress(
   "/api/user/login"
 );
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onLoginSuccess: (authState) => {
-      return dispatch(loginSuccess(authState));
-    },
-  };
-};
-
-export default connect(null, mapDispatchToProps)(UserLoginPageWithApiProgress);
+export default connect()(UserLoginPageWithApiProgress);

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
-//import { Authentication } from "../shared/AuthenticationContext";
 import LanguageSelector from "./LanguageSelector";
 
 import { logoutSuccess } from "../redux/authActions";
@@ -10,11 +9,8 @@ import { logoutSuccess } from "../redux/authActions";
 import { connect } from "react-redux";
 
 class NavBarComponent extends Component {
-  //static contextType = Authentication;
-
   render() {
     const { t, username, isLoggedIn, onLogoutSuccess } = this.props;
-    // console.log(this.props);
 
     let Links = (
       <ul className="navbar-nav ml-auto">
