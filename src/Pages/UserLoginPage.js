@@ -1,112 +1,74 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { login } from "../api/apiCalls";
 import { withTranslation } from "react-i18next";
 import Input from "../components/Input";
-import AlertComponent from "../components/AlertComponent";
-import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
 import { withApiProgress } from "../shared/ApiProgress";
 import { loginHandler, loginSuccess } from "../redux/authActions";
 import { connect } from "react-redux";
+import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
 
-class UserLoginPage extends Component {
-  state = {
-    username: null,
-    password: null,
-    isNull: true,
-    errors: {},
-    showError: false,
-  };
+const UserLoginPage = (props) => {
+  // static contextType = Authentication;
 
-  onChange = async (event) => {
-    const { name, value } = event.target; // object destructing
-    const errors = { ...this.state.errors };
-    errors[name] = undefined;
-    await this.setState({ [name]: value, errors, showError: false });
-    const { username, password } = this.state;
-    if (
-      username === null ||
-      username === "" ||
-      password === "" ||
-      password === null
-    ) {
-      this.setState({ isNull: true });
-    } else {
-      this.setState({ isNull: false });
-    }
-  };
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
+  const [error, setError] = useState();
 
-  alertOnClick = () => {
-    this.setState({ showError: false });
-  };
+  useEffect(() => {
+    setError(undefined);
+  }, [username, password]);
 
-  onClickLogin = async (event) => {
+  const onClickLogin = async (event) => {
     event.preventDefault();
-    const { username, password } = this.state;
-    const { history, dispatch } = this.props;
+    const creds = {
+      username,
+      password,
+    };
+
+    const { history, dispatch } = props;
     const { push } = history;
 
-    if (username !== null && password != null) {
-      const creds = {
-        username,
-        password,
-      };
-
-      try {
-        await dispatch(loginHandler(creds));
-        push("/");
-      } catch (apiError) {
-        this.setState({ errors: apiError, showError: true });
-      }
+    setError(undefined);
+    try {
+      await dispatch(loginHandler(creds));
+      push("/");
+    } catch (apiError) {
+      setError(apiError.response.data.message);
     }
   };
 
-  render() {
-    const { isNull, errors, showError } = this.state; // object destructing
-    const { t, pendingApiCall } = this.props;
+  const { t, pendingApiCall } = props;
 
-    return (
-      <div className="container">
-        <h1 className="">{t("Login")}</h1>
-        <form>
-          <Input
-            name="username"
-            label={t("Username")}
-            onChange={this.onChange}
+  const buttonEnabled = username && password;
+
+  return (
+    <div className="container">
+      <form>
+        <h1 className="text-center">{t("Login")}</h1>
+        <Input
+          label={t("Username")}
+          onChange={(event) => setUsername(event.target.value)}
+        />
+        <Input
+          label={t("Password")}
+          type="password"
+          onChange={(event) => setPassword(event.target.value)}
+        />
+        {error && <div className="alert alert-danger">{error}</div>}
+        <div className="text-center">
+          <ButtonWithProgressBarComponent
+            onClick={onClickLogin}
+            disabled={!buttonEnabled || pendingApiCall}
+            pendingApiCall={pendingApiCall}
+            text={t("Login")}
           />
-          <Input
-            name="password"
-            type="password"
-            label={t("Password")}
-            onChange={this.onChange}
-          />
-
-          <div className="text-center">
-            <ButtonWithProgressBarComponent
-              name="btn"
-              disabled={pendingApiCall || isNull}
-              onClick={this.onClickLogin}
-              showSpinner={pendingApiCall}
-              text={t("Login")}
-            />
-
-            <AlertComponent
-              title="Hata"
-              message={errors?.message}
-              show={showError}
-              onClick={this.alertOnClick}
-            />
-          </div>
-        </form>
-      </div>
-    );
-  }
-}
-
+        </div>
+      </form>
+    </div>
+  );
+};
 const UserLoginPageWithTranslation = withTranslation()(UserLoginPage);
 
-const UserLoginPageWithApiProgress = withApiProgress(
-  UserLoginPageWithTranslation,
-  "/api/user/login"
+export default connect()(
+  withApiProgress(UserLoginPageWithTranslation, "/api/user/login")
 );
-
-export default connect()(UserLoginPageWithApiProgress);
