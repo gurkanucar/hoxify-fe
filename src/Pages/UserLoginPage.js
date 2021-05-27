@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { login } from "../api/apiCalls";
-import { withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import Input from "../components/Input";
 import { withApiProgress } from "../shared/ApiProgress";
 import { loginHandler, loginSuccess } from "../redux/authActions";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
 
 const UserLoginPage = (props) => {
   // static contextType = Authentication;
-
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
   const [error, setError] = useState();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setError(undefined);
@@ -25,7 +26,7 @@ const UserLoginPage = (props) => {
       password,
     };
 
-    const { history, dispatch } = props;
+    const { history } = props;
     const { push } = history;
 
     setError(undefined);
@@ -37,7 +38,9 @@ const UserLoginPage = (props) => {
     }
   };
 
-  const { t, pendingApiCall } = props;
+  const { t } = useTranslation();
+
+  const { pendingApiCall } = props;
 
   const buttonEnabled = username && password;
 
@@ -61,14 +64,12 @@ const UserLoginPage = (props) => {
             disabled={!buttonEnabled || pendingApiCall}
             pendingApiCall={pendingApiCall}
             text={t("Login")}
+            showSpinner={pendingApiCall}
           />
         </div>
       </form>
     </div>
   );
 };
-const UserLoginPageWithTranslation = withTranslation()(UserLoginPage);
 
-export default connect()(
-  withApiProgress(UserLoginPageWithTranslation, "/api/user/login")
-);
+export default withApiProgress(UserLoginPage, "/api/user/login");

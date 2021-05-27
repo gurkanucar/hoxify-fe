@@ -1,13 +1,26 @@
-import React, { useContext } from "react";
-import { withTranslation } from "react-i18next";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import LanguageSelector from "./LanguageSelector";
 import { logoutSuccess } from "../redux/authActions";
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const NavBarComponent = (props) => {
-  const { t, username, isLoggedIn, onLogoutSuccess } = props;
+  const { t } = useTranslation();
+
+  const { username, isLoggedIn } = useSelector((store) => {
+    return {
+      username: store.username,
+      isLoggedIn: store.isLoggedIn,
+    };
+  });
+
+  const dispatch = useDispatch();
+
+  const onLogoutSuccess = () => {
+    dispatch(logoutSuccess());
+  };
 
   let Links = (
     <ul className="navbar-nav ml-auto">
@@ -51,25 +64,4 @@ const NavBarComponent = (props) => {
   );
 };
 
-const TopBarWithTranslation = withTranslation()(NavBarComponent);
-
-const mapStateToProps = (store) => {
-  return {
-    // store,
-    username: store.username,
-    isLoggedIn: store.isLoggedIn,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onLogoutSuccess: () => {
-      return dispatch(logoutSuccess());
-    },
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TopBarWithTranslation);
+export default NavBarComponent;
