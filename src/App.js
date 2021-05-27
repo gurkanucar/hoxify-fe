@@ -16,8 +16,6 @@ import React from "react";
 //browser router backendi tetiklediği için şimdilik hash router
 
 class App extends React.Component {
-  //static contextType = Authentication;
-
   render() {
     const { isLoggedIn } = this.props;
 

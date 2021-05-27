@@ -1,53 +1,40 @@
-import React, { Component } from "react";
-
+import React, { Component, useState } from "react";
 import { changeLanguage, signup } from "../api/apiCalls";
-
 import { withTranslation, WithTranslation } from "react-i18next";
-
 import Input from "../components/Input";
-import LanguageSelector from "../components/LanguageSelector";
 import ButtonWithProgressBarComponent from "../components/ButtonWithProgressBarComponent";
 import { withApiProgress } from "../shared/ApiProgress";
-
 import { connect } from "react-redux";
 import { signupHandler } from "../redux/authActions";
 
-class UserSignupPage extends Component {
-  state = {
+const UserSignupPage = (props) => {
+  const [form, setForm] = useState({
     username: null,
     agreeChecked: false,
     name: null,
     password: null,
     passwordRepeat: null,
-    errors: {},
-  };
+  });
 
-  onChange = (event) => {
+  const [errors, setErrors] = useState({});
+
+  const onChange = (event) => {
     const { name, value } = event.target; // object destructing
-    const errors = { ...this.state.errors };
-    errors[name] = undefined;
-
-    if (name === "password" || name === "passwordRepeat") {
-      if (name === "password" && value !== this.state.passwordRepeat) {
-        errors.passwordRepeat = this.props.t("Password missmatch");
-      } else if (name === "passwordRepeat" && value !== this.state.password) {
-        errors.passwordRepeat = this.props.t("Password missmatch");
-      } else {
-        errors.passwordRepeat = undefined;
-      }
-    }
-
-    this.setState({ [name]: value, errors });
+    setErrors((previousError) => ({ ...previousError, [name]: undefined }));
+    setForm((previousForm) => ({
+      ...previousForm,
+      [name]: value,
+    }));
   };
 
-  onChangeAgree = (event) => {
+  const onChangeAgree = (event) => {
     this.setState({ agreeChecked: event.target.checked });
   };
 
-  onClickSignup = async (event) => {
+  const onClickSignup = async (event) => {
     event.preventDefault();
-    const { username, name, password } = this.state;
-    const { history, dispatch } = this.props;
+    const { username, name, password } = form;
+    const { history, dispatch } = props;
     const { push } = history;
 
     const body = {
@@ -61,56 +48,60 @@ class UserSignupPage extends Component {
       push("/");
     } catch (err) {
       if (err.response.data.validationErrors) {
-        this.setState({ errors: err.response.data.validationErrors });
+        setErrors(err.response.data.validationErrors);
       }
     }
   };
 
-  onChangeLang = (language) => {
-    const { i18n } = this.props;
-    i18n.changeLanguage(language);
-    changeLanguage(language);
-  };
+  //const { agreeChecked, errors } = this.state; // object destructing
 
-  render() {
-    const { agreeChecked, errors } = this.state; // object destructing
-    const { username, name, password, passwordRepeat } = errors;
-    const { t, pendingApiCall } = this.props;
+  const {
+    username: usernameError,
+    name: nameError,
+    password: passwordError,
+    // passwordRepeat: passwordRepeatError,
+  } = errors;
+  const { t, pendingApiCall } = props;
 
-    return (
-      <div className="container">
-        <h1 className="">{t("Sign Up")}</h1>
-        <form>
-          <Input
-            name="username"
-            label={t("Username")}
-            error={username}
-            onChange={this.onChange}
-          />
-          <Input
-            name="name"
-            label={t("Name")}
-            error={name}
-            onChange={this.onChange}
-          />
+  let passwordRepeatError;
+  if (form.password !== form.passwordRepeat) {
+    passwordRepeatError = t("Password missmatch");
+  }
 
-          <Input
-            name="password"
-            label={t("Password")}
-            error={password}
-            onChange={this.onChange}
-            type="password"
-          />
+  return (
+    <div className="container">
+      <h1 className="">{t("Sign Up")}</h1>
+      <form>
+        <Input
+          name="username"
+          label={t("Username")}
+          error={usernameError}
+          onChange={onChange}
+        />
+        <Input
+          name="name"
+          label={t("Name")}
+          error={nameError}
+          onChange={onChange}
+        />
 
-          <Input
-            name="passwordRepeat"
-            label={t("Password Repeat")}
-            onChange={this.onChange}
-            type="password"
-            error={passwordRepeat}
-          />
+        <Input
+          name="password"
+          label={t("Password")}
+          error={passwordError}
+          onChange={onChange}
+          type="password"
+        />
 
-          {/* <div className="mb-3 form-check">
+        <Input
+          name="passwordRepeat"
+          label={t("Password Repeat")}
+          onChange={onChange}
+          type="password"
+          error={passwordRepeatError}
+        />
+
+        {/* <div className="mb-3 form-check">
             <label for="agreeChecked" className="form-check-label">
               {t("Accept")}
             </label>
@@ -123,21 +114,20 @@ class UserSignupPage extends Component {
             ></input>
           </div> */}
 
-          <div className=" text-center">
-            <ButtonWithProgressBarComponent
-              name="btn"
-              disabled={pendingApiCall || passwordRepeat !== undefined}
-              onClick={this.onClickSignup}
-              showSpinner={pendingApiCall}
-              text={t("Sign Up")}
-            />
-          </div>
-          {/* <LanguageSelector /> */}
-        </form>
-      </div>
-    );
-  }
-}
+        <div className=" text-center">
+          <ButtonWithProgressBarComponent
+            name="btn"
+            disabled={pendingApiCall || passwordRepeatError !== undefined}
+            onClick={onClickSignup}
+            showSpinner={pendingApiCall}
+            text={t("Sign Up")}
+          />
+        </div>
+        {/* <LanguageSelector /> */}
+      </form>
+    </div>
+  );
+};
 
 const UserSignupPageWithApiProgressForSignupRequest = withApiProgress(
   UserSignupPage,
