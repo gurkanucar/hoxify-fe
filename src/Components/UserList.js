@@ -7,7 +7,7 @@ const UserList = () => {
   const [page, setPage] = useState({
     content: [],
     number: 0,
-    size: 3,
+    size: 10,
   });
 
   useEffect(() => {
