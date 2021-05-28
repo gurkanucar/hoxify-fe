@@ -39,7 +39,7 @@ const UserLoginPage = (props) => {
 
   const { t } = useTranslation();
 
-  const { pendingApiCall } = useApiProgress("/api/user/login");
+  const pendingApiCall = useApiProgress("/api/user/login");
 
   const buttonEnabled = username && password;
 
