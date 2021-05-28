@@ -7,5 +7,7 @@
     "Name": "Name",
     "Accept": "Accept",
     "Login":"Login",
-    "Log Out":"Log Out"
+    "Log Out":"Log Out",
+    "Users":"Users",
+    "Home Page":"Home Page"
 }
