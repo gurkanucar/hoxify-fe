@@ -5,19 +5,37 @@ import UserListItem from "./UserListItem";
 
 class UserList extends Component {
   state = {
-    users: [],
+    page: {
+      content: [],
+      number: 0,
+      size: 3,
+    },
   };
 
   componentDidMount() {
-    getUsers().then((response) => {
-      this.setState({
-        users: response.data.content,
-      });
-    });
+    this.loadUsers();
   }
 
+  onClickNext = () => {
+    const nextPage = this.state.page.number + 1;
+    this.loadUsers(nextPage);
+  };
+
+  onClickPrevious = () => {
+    const previousPage = this.state.page.number - 1;
+    this.loadUsers(previousPage);
+  };
+
+  loadUsers = (page) => {
+    getUsers(page).then((response) => {
+      this.setState({
+        page: response.data,
+      });
+    });
+  };
+
   render() {
-    const { users } = this.state;
+    const { content: users, last, first } = this.state.page;
     const { t } = this.props;
     return (
       <div className="card">
@@ -26,6 +44,24 @@ class UserList extends Component {
           {users.map((user, index) => (
             <UserListItem user={user} key={user.username} />
           ))}
+        </div>
+        <div>
+          {first === false && (
+            <button
+              className="btn btn-sm btn-light"
+              onClick={this.onClickPrevious}
+            >
+              {t("Previous")}
+            </button>
+          )}
+          {last === false && (
+            <button
+              className="btn btn-sm btn-light float-right"
+              onClick={this.onClickNext}
+            >
+              {t("Next")}
+            </button>
+          )}
         </div>
       </div>
     );
