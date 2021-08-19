@@ -12,5 +12,6 @@
     "Home Page":"Ana Sayfa",
     "Next":"Sonraki >",
     "Previous":"< Önceki",
-    "Load Failure": "Liste Alınamadı"
+    "Load Failure": "Liste Alınamadı",
+    "User Not Found": "User Bulunamadı!"
 }
